@@ -1,0 +1,60 @@
+#install.packages("ggplot2")
+#install.packages("optCluster")
+#install.packages("kohonen")
+#install.packages("mclust")
+#install.packages("som")
+#install.packages("emCluster")
+
+library(ggplot2)
+library(optCluster)
+library(kohonen)
+library(mclust)
+library(class)
+library(cluster)
+library(EMCluster)
+library(mass)
+library(Matrix)
+
+rm(list = ls())
+
+
+
+music_try3 <- read.delim2("D:/MEGASync/BArbeit/R/data/music_try3.csv", header=TRUE)
+
+
+set.seed(20)
+mscaled <- scale(music_try3[ , (3:188)])
+
+optmusicclust <- optCluster(mscaled, 8:16, maxIter = 1000)
+
+optmusicclust
+
+somgrid(xdim = 2, ydim = 2)
+
+sommusic <- SOM(mscaled, grid=somgrid(), rlen = 10000)
+
+plot(sommusic)
+sommusic
+
+km.music <- kmeans(mscaled, 12, nstart=1000)
+plot(km.music$cluster)
+
+
+
+
+
+iem <- init.EM(mscaled, nclass = 12, lab = NULL, EMC = .EMC, stable.solution = TRUE, min.n = NULL, min.n.iter = 10, method = c("em.EM", "Rnd.EM"))
+iem
+
+iem <- shortemcluster(mscaled, maxiter=100)
+iem
+
+
+
+
+
+
+
+
+pam1 <- pam(mscaled, 12)
+plot(pam1$clustering)
